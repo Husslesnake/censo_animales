@@ -6,11 +6,19 @@ Base de datos para la gestión del censo de animales.
 
 | Rama              | Propósito                                      |
 |-------------------|------------------------------------------------|
+<<<<<<< HEAD
 | `main`            | Versión estable y productiva                   |
 | `develop`         | Integración de cambios en desarrollo           |
 | `feature/*`       | Nuevas funcionalidades                         |
 | `hotfix/*`        | Correcciones urgentes sobre `main`             |
 | `release/*`       | Preparación de versiones para producción       |
+=======
+| `main`          | Versión estable y productiva                   |
+| `develop`       | Integración de cambios en desarrollo           |
+| `feature/*`     | Nuevas funcionalidades                         |
+| `hotfix/*`      | Correcciones urgentes sobre `main`           |
+| `release/*`     | Preparación de versiones para producción       |
+>>>>>>> 396f1759ed5c160b9fd73896e1f0c9104a2a27f3
 
 ## Flujo de trabajo
 
