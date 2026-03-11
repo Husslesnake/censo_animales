@@ -1,16 +1,16 @@
 ﻿# Censo de Animales
 
-Base de datos para la gestiÃ³n del censo de animales.
+Base de datos para la gestión del censo de animales.
 
 ## Estructura de ramas
 
-| Rama              | PropÃ³sito                                      |
+| Rama              | Propósito                                      |
 |-------------------|------------------------------------------------|
-| `main`          | VersiÃ³n estable y productiva                   |
-| `develop`       | IntegraciÃ³n de cambios en desarrollo           |
+| `main`          | Versión estable y productiva                   |
+| `develop`       | Integración de cambios en desarrollo           |
 | `feature/*`     | Nuevas funcionalidades                         |
 | `hotfix/*`      | Correcciones urgentes sobre `main`           |
-| `release/*`     | PreparaciÃ³n de versiones para producciÃ³n       |
+| `release/*`     | Preparación de versiones para producción       |
 
 ## Flujo de trabajo
 
@@ -20,10 +20,10 @@ feature/nombre  â†’  develop  â†’  release/v1.x  â†’  main
                                hotfix/fix  â”€â”€â”€â”€â”€â”€â”€â”˜
 `
 
-## ConvenciÃ³n de commits
+## Convención de commits
 
 - `feat:`     nueva funcionalidad
-- `fix:`      correcciÃ³n de error
-- `data:`     actualizaciÃ³n de datos
-- `docs:`     documentaciÃ³n
-- `refactor:` reestructuraciÃ³n sin cambio funcional
+- `fix:`      corrección de error
+- `data:`     actualización de datos
+- `docs:`     documentación
+- `refactor:` reestructuración sin cambio funcional
