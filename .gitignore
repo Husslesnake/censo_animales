@@ -1,0 +1,14 @@
+﻿# Bloqueos de Access
+*.ldb
+*.laccdb
+*_backup.mdb
+~*.mdb
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editores
+*.tmp
+*.bak
