@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Censo Municipal de Animales</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Colores institucionales Ayuntamiento de Navalcarnero */
+  /* Rojo gules del escudo */
+  --rojo:     #B82234;
+  --rojo2:    #941A28;
+  --rojo3:    #D4293F;
+  /* Dorado de la cruz */
+  --dorado:   #C8922A;
+  --dorado2:  #A8761E;
+  --dorado3:  #E8B84B;
+  /* Azul del acueducto */
+  --azul:     #1A4A8A;
+  --azul2:    #123672;
+  --azul3:    #2E6CB5;
+  /* Neutros */
+  --blanco:   #FFFFFF;
+  --gris0:    #F5F5F5;
+  --gris1:    #EBEBEB;
+  --gris2:    #D0D0D0;
+  --gris3:    #8A8A8A;
+  --gris4:    #555555;
+  --tinta:    #1A1A1A;
+  --tinta2:   #333333;
+  /* Semánticos (alias para compatibilidad con código existente) */
+  --papel:    #F5F5F5;
+  --borde:    #D0D0D0;
+  --borde2:   #EBEBEB;
+  --gris:     #8A8A8A;
+  --verde:    #1E6B3C;
+  --naranja:  #C05820;
+  --fondo-tr: #F9F9F9;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 15px; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--gris0);
+  color: var(--tinta);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══ CABECERA ══════════════════════════════════════════════ */
+header {
+  background: var(--blanco);
+  border-bottom: 4px solid var(--rojo);
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: stretch;
+  height: 68px;
+  box-shadow: 0 2px 6px rgba(184,34,52,0.08);
+}
+
+.header-marca {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 2rem;
+  border-right: 1px solid var(--borde);
+}
+
+.marca-escudo {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.marca-texto {
+  display: flex;
+  flex-direction: column;
+}
+
+.marca-texto strong {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--rojo);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.marca-texto small {
+  font-size: 0.68rem;
+  color: var(--gris);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.header-nav {
+  display: flex;
+  align-items: stretch;
+  margin-left: auto;
+  gap: 0;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  padding: 0 1.4rem;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gris);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--rojo2); }
+.tab-btn.active {
+  color: var(--rojo);
+  border-bottom-color: var(--rojo);
+  font-weight: 700;
+}
+
+/* ══ LAYOUT ════════════════════════════════════════════════ */
+.container {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+  flex: 1;
+}
+
+.page { display: none; }
+.page.active { display: block; animation: aparecer .25s ease; }
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══ CABECERA DE SECCIÓN ═══════════════════════════════════ */
+.section-header {
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--rojo);
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-header h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--tinta);
+  line-height: 1;
+}
+
+.section-header p {
+  font-size: 0.82rem;
+  color: var(--gris);
+  letter-spacing: 0.01em;
+}
+
+.section-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dorado2);
+  background: transparent;
+  border: 1px solid var(--dorado);
+  padding: 0.1rem 0.4rem;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* ══ BLOQUE DE FORMULARIO ══════════════════════════════════ */
+.bloque {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  margin-bottom: 1.25rem;
+  border-left: 4px solid var(--rojo);
+}
+
+.bloque-titulo {
+  padding: 0.6rem 1.25rem;
+  border-bottom: 1px solid var(--borde2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--gris0);
+}
+
+.bloque-titulo h3 {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rojo2);
+}
+
+.bloque-titulo .req-label {
+  font-size: 0.68rem;
+  color: var(--rojo);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.bloque-body {
+  padding: 1.25rem 1.25rem 1.5rem;
+}
+
+/* ══ FORMULARIO ════════════════════════════════════════════ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 1.25rem;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.form-group.span2 { grid-column: span 2; }
+.form-group.span3 { grid-column: span 3; }
+
+label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--tinta2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+label .req { color: var(--rojo); margin-left: 2px; }
+
+input, select {
+  border: 1px solid var(--borde);
+  border-radius: 0;
+  padding: 0.5rem 0.6rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--tinta);
+  background: var(--blanco);
+  outline: none;
+  width: 100%;
+  transition: border-color .15s;
+  -webkit-appearance: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--rojo);
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--rojo);
+}
+
+input::placeholder {
+  color: var(--borde);
+  font-style: italic;
+}
+
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%233D3830'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  padding-right: 1.8rem;
+}
+
+/* Divisor interno */
+.divisor {
+  border: none;
+  border-top: 1px dashed var(--borde);
+  margin: 1rem 0;
+}
+
+/* ══ CHECKBOXES ESTILO DOCUMENTO ══════════════════════════ */
+.check-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.check-doc {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--tinta2);
+  border-radius: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background: var(--blanco);
+  flex-shrink: 0;
+  position: relative;
+  padding: 0;
+}
+
+.check-doc:checked {
+  background: var(--tinta);
+  border-color: var(--tinta);
+}
+
+.check-doc:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.check-doc-label {
+  font-size: 0.82rem;
+  color: var(--tinta2);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ══ BOTONES ═══════════════════════════════════════════════ */
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: 1.5px solid;
+  padding: 0.55rem 1.5rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 0;
+}
+
+.btn-primary {
+  background: var(--rojo);
+  color: var(--blanco);
+  border-color: var(--rojo);
+}
+.btn-primary:hover {
+  background: var(--rojo2);
+  border-color: var(--rojo2);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--tinta2);
+  border-color: var(--borde);
+}
+.btn-secondary:hover {
+  border-color: var(--tinta2);
+  background: var(--papel);
+}
+
+.btn-accion {
+  background: transparent;
+  color: var(--azul);
+  border-color: var(--azul);
+}
+.btn-accion:hover {
+  background: var(--azul);
+  color: #fff;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ══ ALERTAS ═══════════════════════════════════════════════ */
+.alert {
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: none;
+  align-items: flex-start;
+  gap: 0.6rem;
+  border-left: 4px solid;
+  letter-spacing: 0.01em;
+}
+.alert.show { display: flex; animation: aparecer .2s ease; }
+.alert-ok {
+  background: #EAF3ED;
+  color: var(--verde);
+  border-color: var(--verde);
+}
+.alert-error {
+  background: #F9ECED;
+  color: var(--rojo);
+  border-color: var(--rojo);
+}
+.alert-icon { flex-shrink: 0; }
+
+/* ══ TABLA ═════════════════════════════════════════════════ */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+thead th {
+  background: var(--rojo);
+  color: #fff;
+  padding: 0.55rem 0.8rem;
+  text-align: left;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+tbody tr { border-bottom: 1px solid var(--borde2); }
+tbody tr:nth-child(even) { background: var(--fondo-tr); }
+tbody tr:hover { background: #FDF0F2; }
+tbody td {
+  padding: 0.5rem 0.8rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--tinta2);
+}
+
+.empty-row td {
+  text-align: center;
+  color: var(--gris);
+  padding: 2.5rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Tags de estado */
+.tag {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid;
+  letter-spacing: 0.04em;
+}
+.tag-peligroso { color: var(--rojo);  border-color: var(--rojo);  background: #F9ECED; }
+.tag-sano      { color: var(--verde); border-color: #9FC9AF; background: #EAF3ED; }
+.tag-id        { color: var(--tinta2); border-color: var(--borde); background: var(--papel); }
+
+/* ══ SPINNER ═══════════════════════════════════════════════ */
+.spinner {
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: girar .6s linear infinite;
+  display: none;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* ══ BARRA DE BÚSQUEDA ════════════════════════════════════ */
+.busqueda-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0.85rem;
+  background: var(--gris0);
+  border: 1px solid var(--borde2);
+  border-left: 3px solid var(--dorado);
+  margin-bottom: 0;
+}
+
+.busqueda-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 180px;
+}
+
+.busqueda-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta2);
+}
+
+.busqueda-input-wrap {
+  display: flex;
+  gap: 0;
+}
+
+.busqueda-input-wrap input {
+  border-right: none;
+  flex: 1;
+  min-width: 0;
+}
+
+.busqueda-input-wrap input:focus {
+  box-shadow: none;
+  border-color: var(--tinta);
+  position: relative;
+  z-index: 1;
+}
+
+.busqueda-input-wrap .btn {
+  border-left: none;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.busqueda-sep {
+  width: 1px;
+  height: 36px;
+  background: var(--borde);
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+
+.contador {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gris);
+  letter-spacing: 0.04em;
+  margin-top: 0.4rem;
+  min-height: 1rem;
+}
+
+.table-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.btn-ocultar {
+  background: transparent;
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--gris);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0;
+  transition: color .15s;
+}
+.btn-ocultar:hover { color: var(--tinta); }
+
+.table-wrap {
+  overflow: hidden;
+  max-height: 2000px;
+  transition: max-height .3s ease, opacity .25s ease;
+  opacity: 1;
+}
+.table-wrap.oculta {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ══ VALIDACIÓN DNI ════════════════════════════════════════ */
+.dni-hint {
+  font-size: 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 1rem;
+  display: block;
+}
+.dni-hint.ok    { color: var(--verde); }
+.dni-hint.error { color: var(--rojo); }
+
+input.dni-ok    { border-color: var(--verde); }
+input.dni-error { border-color: var(--rojo); box-shadow: inset 0 0 0 1px var(--rojo); }
+
+/* ══ PAGINACIÓN ════════════════════════════════════════════ */
+.paginacion {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.paginacion button {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  color: var(--tinta2);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  min-width: 32px;
+}
+
+.paginacion button:hover {
+  border-color: var(--tinta2);
+  background: var(--papel);
+}
+
+.paginacion button.activa {
+  background: var(--rojo);
+  color: #fff;
+  border-color: var(--rojo);
+}
+
+.paginacion button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.paginacion .pag-info {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gris);
+  margin-left: 0.5rem;
+}
+
+/* ══ RESPONSIVE ════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.span2, .form-group.span3 { grid-column: 1; }
+  .header-nav { display: none; }
+  header { padding: 0 1rem; }
+  .container { padding: 1.5rem 1rem 3rem; }
+}
+</style>
+</head>
+<body>
+
+<div style="height:5px;background:linear-gradient(90deg,var(--rojo) 0%,var(--rojo) 60%,var(--dorado) 60%,var(--dorado) 80%,var(--azul) 80%,var(--azul) 100%);"></div>
+<header>
+  <div class="header-marca">
+    <span class="marca-escudo" style="color:var(--rojo);font-size:1.8rem;">✦</span>
+    <div class="marca-texto">
+      <strong>Censo Municipal de Animales</strong>
+      <small>Gestión de Fauna Urbana · Padrón Municipal</small>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <button class="tab-btn active" onclick="mostrarPagina('propietarios',this)">Propietarios</button>
+    <button class="tab-btn" onclick="mostrarPagina('animales',this)">Animales</button>
+    <button class="tab-btn" onclick="mostrarPagina('seguros',this)">Seguros</button>
+    <button class="tab-btn" onclick="mostrarPagina('consulta',this)">Consulta</button>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- ══ PROPIETARIOS ══ -->
+  <div class="page active" id="page-propietarios">
+
+    <div class="section-header">
+      <span class="section-num">FORM-01</span>
+      <h2>Alta de Propietario</h2>
+      <p>Registro de nuevo titular en el padrón municipal</p>
+    </div>
+
+    <div id="alert-prop" class="alert"><span class="alert-icon"></span><span class="alert-msg"></span></div>
+
+    <form id="form-prop" onsubmit="submitPropietario(event)">
+
+      <div class="bloque">
+        <div class="bloque-titulo">
+          <h3>Datos personales</h3>
+          <span class="req-label">* campos obligatorios</span>
+        </div>
+        <div class="bloque-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>DNI / NIE <span class="req">*</span></label>
+              <input type="text" id="input-prop-dni" name="DNI" placeholder="12345678A" required maxlength="15"
+                     oninput="validarDNI(this)" onblur="validarDNI(this,true)">
+              <span class="dni-hint" id="hint-prop-dni"></span>
+            </div>
+            <div class="form-group">
+              <label>Nombre <span class="req">*</span></label>
+              <input type="text" name="NOMBRE" placeholder="Nombre" required>
+            </div>
+            <div class="form-group">
+              <label>Primer Apellido <span class="req">*</span></label>
+              <input type="text" name="PRIMER_APELLIDO" placeholder="Primer apellido" required>
+            </div>
+            <div class="form-group">
+              <label>Segundo Apellido</label>
+              <input type="text" name="SEGUNDO_APELLIDO" placeholder="Segundo apellido">
+            </div>
+            <div class="form-group">
+              <label>Teléfono principal</label>
+              <input type="tel" name="TELEFONO1" placeholder="600 000 000" maxlength="15">
+            </div>
+            <div class="form-group">
+              <label>Teléfono secundario</label>
+              <input type="tel" name="TELEFONO2" placeholder="910 000 000" maxlength="15">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="bloque-titulo">
+          <h3>Domicilio</h3>
+        </div>
+        <div class="bloque-body">
+          <div class="form-grid">
+            <div class="form-group span2">
+              <label>Domicilio</label>
+              <input type="text" name="DOMICILIO" placeholder="Calle Mayor, 1">
+            </div>
+            <div class="form-group">
+              <label>Código Postal</label>
+              <input type="text" name="CP" placeholder="28001" maxlength="10">
+            </div>
+            <div class="form-group">
+              <label>Municipio</label>
+              <input type="text" name="MINICIPIO" placeholder="Madrid">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="btn-prop">
+          <div class="spinner" id="sp-prop"></div>
+          <span>Registrar propietario</span>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm('form-prop','alert-prop')">Limpiar campos</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ══ ANIMALES ══ -->
+  <div class="page" id="page-animales">
+
+    <div class="section-header">
+      <span class="section-num">FORM-02</span>
+      <h2>Alta de Animal</h2>
+      <p>Inscripción de mascota en el censo municipal</p>
+    </div>
+
+    <div id="alert-anim" class="alert"><span class="alert-icon"></span><span class="alert-msg"></span></div>
+
+    <form id="form-anim" onsubmit="submitAnimal(event)">
+
+      <div class="bloque">
+        <div class="bloque-titulo">
+          <h3>Identificación</h3>
+          <span class="req-label">* campos obligatorios</span>
+        </div>
+        <div class="bloque-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>N.º de chip <span class="req">*</span></label>
+              <input type="text" name="N_CHIP" placeholder="CHIP0001" required maxlength="50">
+            </div>
+            <div class="form-group">
+              <label>DNI propietario <span class="req">*</span></label>
+              <input type="text" name="DNI_PROPIETARIO" placeholder="12345678A" required maxlength="15">
+            </div>
+            <div class="form-group">
+              <label>Nombre del animal</label>
+              <input type="text" name="NOMBRE" placeholder="Toby">
+            </div>
+            <div class="form-group">
+              <label>N.º censo</label>
+              <input type="text" name="N_CENSO" placeholder="CEN-0001">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <div class="bloque-titulo">
+          <h3>Características del animal</h3>
+        </div>
+        <div class="bloque-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Especie</label>
+              <select name="ESPECIE">
+                <option value="">— Seleccionar —</option>
+                <option>Perro</option><option>Gato</option><option>Conejo</option>
+                <option>Ave</option><option>Reptil</option><option>Roedor</option><option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Raza</label>
+              <input type="text" name="RAZA" placeholder="Labrador">
+            </div>
+            <div class="form-group">
+              <label>Sexo</label>
+              <select name="SEXO" id="sel-sexo">
+                <option value="">Cargando…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Color</label>
+              <input type="text" name="COLOR" placeholder="Negro / Blanco">
+            </div>
+            <div class="form-group">
+              <label>Fecha de nacimiento</label>
+              <input type="date" name="FECHA_NACIMIENTO" id="inp-fecha-nac" max="">
+            </div>
+            <div class="form-group">
+              <label>Última vacuna antirrábica</label>
+              <input type="date" name="FECHA_ULTIMA_VACUNA_ANTIRRABICA" id="inp-fecha-vac" max="">
+            </div>
+          </div>
+
+          <hr class="divisor">
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Estado sanitario</label>
+              <div class="check-group">
+                <input type="checkbox" class="check-doc" id="chk-ester" name="ESTERILIZADO" value="1">
+                <label class="check-doc-label" for="chk-ester">Esterilizado / castrado</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Clasificación</label>
+              <div class="check-group">
+                <input type="checkbox" class="check-doc" id="chk-pelig" name="PELIGROSO" value="1">
+                <label class="check-doc-label" for="chk-pelig">Animal potencialmente peligroso</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="btn-anim">
+          <div class="spinner" id="sp-anim"></div>
+          <span>Registrar animal</span>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm('form-anim','alert-anim')">Limpiar campos</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ══ CONSULTA ══ -->
+  <div class="page" id="page-consulta">
+
+    <div class="section-header">
+      <span class="section-num">CONS-01</span>
+      <h2>Consulta del Censo</h2>
+      <p>Búsqueda por índice o listado completo</p>
+    </div>
+
+    <!-- PROPIETARIOS -->
+    <div class="bloque" style="margin-bottom:1.5rem;">
+      <div class="bloque-titulo"><h3>Propietarios</h3></div>
+      <div class="bloque-body">
+
+        <!-- Barra de búsqueda -->
+        <div class="busqueda-bar">
+          <div class="busqueda-campo">
+            <label class="busqueda-label">Por DNI</label>
+            <div class="busqueda-input-wrap">
+              <input type="text" id="busq-prop-dni" placeholder="12345678A"
+                     maxlength="20" onkeydown="if(event.key==='Enter') buscarPropietario()">
+              <button class="btn btn-accion" onclick="buscarPropietario()">Buscar</button>
+            </div>
+          </div>
+          <div class="busqueda-campo">
+            <label class="busqueda-label">Por primer apellido</label>
+            <div class="busqueda-input-wrap">
+              <input type="text" id="busq-prop-apellido1" placeholder="García"
+                     maxlength="60" onkeydown="if(event.key==='Enter') buscarPorApellidos()">
+              <button class="btn btn-accion" onclick="buscarPorApellidos()">Buscar</button>
+            </div>
+          </div>
+          <div class="busqueda-campo">
+            <label class="busqueda-label">Por segundo apellido</label>
+            <div class="busqueda-input-wrap">
+              <input type="text" id="busq-prop-apellido2" placeholder="López"
+                     maxlength="60" onkeydown="if(event.key==='Enter') buscarPorApellidos()">
+              <button class="btn btn-accion" onclick="buscarPorApellidos()">Buscar</button>
+            </div>
+          </div>
+          <div class="busqueda-sep"></div>
+          <button class="btn btn-secondary" onclick="cargarPropietarios()">Ver todos</button>
+        </div>
+
+        <div id="alert-busq-prop" class="alert" style="margin-top:.75rem;margin-bottom:0;">
+          <span class="alert-icon"></span><span class="alert-msg"></span>
+        </div>
+
+        <div class="table-header-row" style="margin-top:1rem;">
+          <div id="prop-contador" class="contador"></div>
+          <button class="btn-ocultar" id="btn-ocultar-prop" onclick="ocultarTabla('prop')" style="display:none;">
+            ▲ Ocultar registros
+          </button>
+        </div>
+
+        <div id="tabla-wrap-prop" class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>DNI</th><th>Nombre</th><th>Primer Apellido</th><th>Segundo Apellido</th><th>Teléfono</th><th>Municipio</th></tr>
+            </thead>
+            <tbody id="tbody-prop">
+              <tr class="empty-row"><td colspan="6">Introduzca un criterio de búsqueda o pulse «Ver todos».</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="pag-prop" class="paginacion"></div>
+      </div>
+    </div>
+
+    <!-- ANIMALES -->
+    <div class="bloque">
+      <div class="bloque-titulo"><h3>Animales</h3></div>
+      <div class="bloque-body">
+
+        <div class="busqueda-bar">
+          <div class="busqueda-campo">
+            <label class="busqueda-label">Buscar por N.º chip</label>
+            <div class="busqueda-input-wrap">
+              <input type="text" id="busq-anim-chip" placeholder="CHIP0001"
+                     maxlength="50" onkeydown="if(event.key==='Enter') buscarAnimal()">
+              <button class="btn btn-accion" onclick="buscarAnimal()">Buscar</button>
+            </div>
+          </div>
+          <div class="busqueda-campo">
+            <label class="busqueda-label">Buscar por DNI propietario</label>
+            <div class="busqueda-input-wrap">
+              <input type="text" id="busq-anim-dni" placeholder="12345678A"
+                     maxlength="20" onkeydown="if(event.key==='Enter') buscarAnimalesPorDni()">
+              <button class="btn btn-accion" onclick="buscarAnimalesPorDni()">Buscar</button>
+            </div>
+          </div>
+          <div class="busqueda-sep"></div>
+          <button class="btn btn-secondary" onclick="cargarAnimales()">Ver todos</button>
+        </div>
+
+        <div id="alert-busq-anim" class="alert" style="margin-top:.75rem;margin-bottom:0;">
+          <span class="alert-icon"></span><span class="alert-msg"></span>
+        </div>
+
+        <div class="table-header-row" style="margin-top:1rem;">
+          <div id="anim-contador" class="contador"></div>
+          <button class="btn-ocultar" id="btn-ocultar-anim" onclick="ocultarTabla('anim')" style="display:none;">
+            ▲ Ocultar registros
+          </button>
+        </div>
+
+        <div id="tabla-wrap-anim" class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Chip</th><th>Nombre</th><th>Especie</th><th>Raza</th><th>Sexo</th><th>Propietario</th><th>Estado</th></tr>
+            </thead>
+            <tbody id="tbody-anim">
+              <tr class="empty-row"><td colspan="7">Introduzca un criterio de búsqueda o pulse «Ver todos».</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="pag-anim" class="paginacion"></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ══ SEGUROS ══ -->
+  <div class="page" id="page-seguros">
+
+    <div class="section-header">
+      <span class="section-num">FORM-03</span>
+      <h2>Pólizas de Seguro</h2>
+      <p>Registro y consulta de seguros de animales</p>
+    </div>
+
+    <div id="alert-seg" class="alert"><span class="alert-icon"></span><span class="alert-msg"></span></div>
+
+    <form id="form-seg" onsubmit="submitSeguro(event)">
+      <div class="bloque">
+        <div class="bloque-titulo">
+          <h3>Nueva póliza</h3>
+          <span class="req-label">* campos obligatorios</span>
+        </div>
+        <div class="bloque-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>N.º chip del animal <span class="req">*</span></label>
+              <input type="text" name="N_CHIP" placeholder="CHIP0001" required maxlength="50">
+            </div>
+            <div class="form-group">
+              <label>Compañía aseguradora <span class="req">*</span></label>
+              <input type="text" name="SEGURO_COMPANIA" placeholder="Mapfre" required maxlength="50">
+            </div>
+            <div class="form-group">
+              <label>N.º póliza <span class="req">*</span></label>
+              <input type="text" name="SEGURO_POLIZA" placeholder="POL-2024-0001" required maxlength="50">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="btn-seg">
+          <div class="spinner" id="sp-seg"></div>
+          <span>Registrar póliza</span>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm('form-seg','alert-seg')">Limpiar</button>
+      </div>
+    </form>
+
+    <div class="bloque" style="margin-top:1.5rem;">
+      <div class="bloque-titulo"><h3>Pólizas registradas</h3></div>
+      <div class="bloque-body">
+        <div style="margin-bottom:1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-accion" onclick="cargarSeguros()">Ver todas</button>
+          <div class="busqueda-campo" style="min-width:200px;flex:1;">
+            <label class="busqueda-label">Buscar por chip</label>
+            <div class="busqueda-input-wrap">
+              <input type="text" id="busq-seg-chip" placeholder="CHIP0001" maxlength="50"
+                     onkeydown="if(event.key==='Enter') buscarSegurosPorChip()">
+              <button class="btn btn-accion" onclick="buscarSegurosPorChip()">Buscar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-header-row">
+          <div id="seg-contador" class="contador"></div>
+          <button class="btn-ocultar" id="btn-ocultar-seg" onclick="ocultarTabla('seg')" style="display:none;">
+            ▲ Ocultar registros
+          </button>
+        </div>
+
+        <div id="tabla-wrap-seg" class="table-wrap" style="margin-top:.5rem;">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Chip</th><th>Animal</th><th>Especie</th><th>Compañía</th><th>N.º Póliza</th><th>Propietario</th><th>Acción</th></tr>
+            </thead>
+            <tbody id="tbody-seg">
+              <tr class="empty-row"><td colspan="8">Pulse «Ver todas» o busque por chip.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="pag-seg" class="paginacion"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer style="background:var(--rojo);color:#fff;padding:1rem 2.5rem;margin-top:2rem;font-size:0.78rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+  <span style="font-family:'Libre Baskerville',serif;font-weight:700;letter-spacing:0.02em;">Ayuntamiento de Navalcarnero</span>
+  <span style="opacity:0.8;">Plaza de Francisco Sandoval, 1 · 28600 Madrid · 918 10 13 30</span>
+  <span style="opacity:0.7;font-size:0.72rem;">&copy; 2026 Censo Municipal de Animales</span>
+</footer>
+
+<script>
+const API = "/api";
+const POR_PAGINA = 15;
+
+// ── Estado de paginación ──────────────────────────────────────────
+const estado = {
+  prop: { datos: [], pagina: 1 },
+  anim: { datos: [], pagina: 1 },
+};
+
+// ── Navegación ───────────────────────────────────────────────────
+function mostrarPagina(id, btn) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  btn.classList.add("active");
+}
+
+// ── Alertas ──────────────────────────────────────────────────────
+function mostrarAlerta(id, tipo, msg) {
+  const el = document.getElementById(id);
+  el.className = "alert show " + (tipo === "ok" ? "alert-ok" : "alert-error");
+  el.querySelector(".alert-icon").textContent = tipo === "ok" ? "✔" : "✖";
+  el.querySelector(".alert-msg").textContent  = msg;
+  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  setTimeout(() => el.classList.remove("show"), 6000);
+}
+
+// ── Reset ─────────────────────────────────────────────────────────
+function resetForm(formId, alertId) {
+  document.getElementById(formId).reset();
+  document.getElementById(alertId).classList.remove("show");
+}
+
+// ── Helpers de renderizado ────────────────────────────────────────
+function filasProp(datos) {
+  return datos.map(r => `
+    <tr>
+      <td><span class="tag tag-id">${r.DNI || "—"}</span></td>
+      <td>${r.NOMBRE || "—"}</td>
+      <td>${r.PRIMER_APELLIDO || "—"}</td>
+      <td>${r.SEGUNDO_APELLIDO || "—"}</td>
+      <td>${r.TELEFONO1 || "—"}</td>
+      <td>${r.MINICIPIO || r.MUNICIPIO || "—"}</td>
+    </tr>`).join("");
+}
+
+function filasAnim(datos) {
+  return datos.map(r => {
+    const chip  = r["N_CHIP"] || r["Nº_CHIP"] || "—";
+    const pelig = r.PELIGROSO == 1
+      ? '<span class="tag tag-peligroso">Peligroso</span>'
+      : '<span class="tag tag-sano">No</span>';
+    return `
+      <tr>
+        <td><span class="tag tag-id">${chip}</span></td>
+        <td>${r.NOMBRE || "—"}</td>
+        <td>${r.ESPECIE || "—"}</td>
+        <td>${r.RAZA || "—"}</td>
+        <td>${r.SEXO || "—"}</td>
+        <td>${r.DNI_PROPIETARIO || "—"}</td>
+        <td>${pelig}</td>
+      </tr>`;
+  }).join("");
+}
+
+// ── Paginación ───────────────────────────────────────────────────
+function renderPagina(tipo, pagina) {
+  const e       = estado[tipo];
+  const total   = e.datos.length;
+  const npags   = Math.ceil(total / POR_PAGINA);
+  pagina        = Math.max(1, Math.min(pagina, npags));
+  e.pagina      = pagina;
+
+  const inicio  = (pagina - 1) * POR_PAGINA;
+  const trozo   = e.datos.slice(inicio, inicio + POR_PAGINA);
+
+  const tbody   = document.getElementById("tbody-" + tipo);
+  const ncols   = tipo === "prop" ? 6 : (tipo === "seg" ? 8 : 7);
+  tbody.innerHTML = trozo.length
+    ? (tipo === "prop" ? filasProp(trozo) : (tipo === "seg" ? filasSeguro(trozo) : filasAnim(trozo)))
+    : `<tr class="empty-row"><td colspan="${ncols}">Sin resultados.</td></tr>`;
+
+  // Renderizar controles de paginación
+  const contenedor = document.getElementById("pag-" + tipo);
+  if (!contenedor) return;
+
+  if (npags <= 1) { contenedor.innerHTML = ""; return; }
+
+  let html = `<button onclick="renderPagina('${tipo}',${pagina-1})" ${pagina===1?"disabled":""}>‹</button>`;
+
+  // Ventana de páginas: siempre muestra máximo 7 botones
+  const ventana = [];
+  if (npags <= 7) {
+    for (let i = 1; i <= npags; i++) ventana.push(i);
+  } else {
+    ventana.push(1);
+    if (pagina > 3)          ventana.push("…");
+    for (let i = Math.max(2, pagina-1); i <= Math.min(npags-1, pagina+1); i++) ventana.push(i);
+    if (pagina < npags - 2)  ventana.push("…");
+    ventana.push(npags);
+  }
+
+  ventana.forEach(p => {
+    if (p === "…") {
+      html += `<button disabled>…</button>`;
+    } else {
+      html += `<button class="${p===pagina?"activa":""}" onclick="renderPagina('${tipo}',${p})">${p}</button>`;
+    }
+  });
+
+  html += `<button onclick="renderPagina('${tipo}',${pagina+1})" ${pagina===npags?"disabled":""}>›</button>`;
+  html += `<span class="pag-info">pág. ${pagina} / ${npags} · ${total} registros</span>`;
+  contenedor.innerHTML = html;
+}
+
+function setDatos(tipo, datos, label) {
+  if (!estado[tipo]) estado[tipo] = { datos: [], pagina: 1 };
+  estado[tipo].datos   = datos;
+  estado[tipo].pagina  = 1;
+  renderPagina(tipo, 1);
+  setContador(tipo + "-contador", datos.length, label);
+}
+
+function setContador(id, n, label) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = n !== null ? `${n} registro${n !== 1 ? "s" : ""} ${label}` : "";
+
+  const tipo = id.replace("-contador", "");
+  const btn  = document.getElementById("btn-ocultar-" + tipo);
+  if (btn) btn.style.display = (n !== null && n > 0) ? "inline" : "none";
+
+  const wrap = document.getElementById("tabla-wrap-" + tipo);
+  if (wrap && n !== null && n > 0) {
+    wrap.classList.remove("oculta");
+    if (btn) btn.textContent = "▲ Ocultar registros";
+  }
+}
+
+function ocultarTabla(tipo) {
+  const wrap = document.getElementById("tabla-wrap-" + tipo);
+  const btn  = document.getElementById("btn-ocultar-" + tipo);
+  const oculta = wrap.classList.toggle("oculta");
+  btn.textContent = oculta ? "▼ Mostrar registros" : "▲ Ocultar registros";
+}
+
+// ── Validación DNI / NIE ─────────────────────────────────────────
+// DNI: 8 dígitos + 1 letra de control
+// NIE: X/Y/Z + 7 dígitos + 1 letra de control
+const LETRAS_DNI = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+function calcularLetraDNI(numero) {
+  return LETRAS_DNI[numero % 23];
+}
+
+function validarFormatoDNI(valor) {
+  const v = valor.trim().toUpperCase();
+
+  // DNI: 8 dígitos + letra
+  const reDNI = /^(\d{8})([A-Z])$/;
+  const mDNI  = v.match(reDNI);
+  if (mDNI) {
+    const esperada = calcularLetraDNI(parseInt(mDNI[1]));
+    if (mDNI[2] === esperada) return { ok: true,  msg: "✔ DNI válido" };
+    return { ok: false, msg: `✖ Letra incorrecta. La letra correcta es «${esperada}»` };
+  }
+
+  // NIE: X/Y/Z + 7 dígitos + letra
+  const reNIE = /^([XYZ])(\d{7})([A-Z])$/;
+  const mNIE  = v.match(reNIE);
+  if (mNIE) {
+    const prefijo  = { X: "0", Y: "1", Z: "2" }[mNIE[1]];
+    const numero   = parseInt(prefijo + mNIE[2]);
+    const esperada = calcularLetraDNI(numero);
+    if (mNIE[3] === esperada) return { ok: true,  msg: "✔ NIE válido" };
+    return { ok: false, msg: `✖ Letra incorrecta. La letra correcta es «${esperada}»` };
+  }
+
+  // Formato incorrecto
+  if (/^\d{1,8}$/.test(v))       return { ok: null, msg: "" };  // escribiendo todavía
+  if (/^\d{8}$/.test(v))         return { ok: null, msg: "Falta la letra al final" };
+  if (v.length === 0)            return { ok: null, msg: "" };
+
+  return { ok: false, msg: "✖ Formato incorrecto. Use 8 dígitos + letra (12345678A) o NIE (X1234567A)" };
+}
+
+function validarDNI(input, alBlur = false) {
+  const hint   = document.getElementById("hint-prop-dni");
+  const result = validarFormatoDNI(input.value);
+
+  input.classList.remove("dni-ok", "dni-error");
+  if (hint) { hint.className = "dni-hint"; hint.textContent = ""; }
+
+  if (result.ok === true) {
+    input.classList.add("dni-ok");
+    if (hint) { hint.classList.add("ok"); hint.textContent = result.msg; }
+  } else if (result.ok === false) {
+    input.classList.add("dni-error");
+    if (hint) { hint.classList.add("error"); hint.textContent = result.msg; }
+  } else if (result.msg && alBlur) {
+    // Solo mostrar "falta letra" al perder el foco
+    input.classList.add("dni-error");
+    if (hint) { hint.classList.add("error"); hint.textContent = result.msg; }
+  }
+}
+
+// ── Submit propietario ────────────────────────────────────────────
+async function submitPropietario(e) {
+  e.preventDefault();
+
+  // Validar DNI antes de enviar
+  const dniInput = document.getElementById("input-prop-dni");
+  const resultado = validarFormatoDNI(dniInput.value);
+  if (resultado.ok !== true) {
+    validarDNI(dniInput, true);
+    dniInput.focus();
+    mostrarAlerta("alert-prop", "error", "El DNI introducido no es válido. Corrígalo antes de continuar.");
+    return;
+  }
+
+  const btn = document.getElementById("btn-prop");
+  const sp  = document.getElementById("sp-prop");
+  btn.disabled = true; sp.style.display = "block";
+
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  Object.keys(data).forEach(k => { if (!data[k]) delete data[k]; });
+
+  try {
+    const res  = await fetch(API + "/propietarios", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    json.ok
+      ? (mostrarAlerta("alert-prop", "ok", json.mensaje), e.target.reset())
+      : mostrarAlerta("alert-prop", "error", json.error);
+  } catch {
+    mostrarAlerta("alert-prop", "error", "No se pudo conectar con el servidor.");
+  }
+  btn.disabled = false; sp.style.display = "none";
+}
+
+// ── Submit animal ─────────────────────────────────────────────────
+async function submitAnimal(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btn-anim");
+  const sp  = document.getElementById("sp-anim");
+  btn.disabled = true; sp.style.display = "block";
+
+  const fd = new FormData(e.target);
+  const data = {};
+  for (const [k, v] of fd.entries()) { if (v) data[k] = v; }
+  ["ESTERILIZADO","PELIGROSO"].forEach(k => { if (!(k in data)) data[k] = 0; });
+
+  try {
+    const res  = await fetch(API + "/animales", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    json.ok
+      ? (mostrarAlerta("alert-anim", "ok", json.mensaje), e.target.reset())
+      : mostrarAlerta("alert-anim", "error", json.error);
+  } catch {
+    mostrarAlerta("alert-anim", "error", "No se pudo conectar con el servidor.");
+  }
+  btn.disabled = false; sp.style.display = "none";
+}
+
+// ══ CONSULTA ═════════════════════════════════════════════════════
+
+async function cargarPropietarios() {
+  const tbody = document.getElementById("tbody-prop");
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Cargando…</td></tr>';
+  setContador("prop-contador", null);
+  document.getElementById("alert-busq-prop").classList.remove("show");
+  try {
+    const json = await (await fetch(API + "/propietarios")).json();
+    if (!json.ok) throw new Error(json.error);
+    if (!json.datos.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Sin registros.</td></tr>';
+      return;
+    }
+    setDatos("prop", json.datos, "encontrados");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${err.message}</td></tr>`;
+  }
+}
+
+async function buscarPropietario() {
+  const dni   = document.getElementById("busq-prop-dni").value.trim().toUpperCase();
+  const tbody = document.getElementById("tbody-prop");
+  const alrt  = "alert-busq-prop";
+  if (!dni) { mostrarAlerta(alrt, "error", "Introduzca un DNI para buscar."); return; }
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Buscando…</td></tr>';
+  setContador("prop-contador", null);
+  document.getElementById(alrt).classList.remove("show");
+  try {
+    const json = await (await fetch(API + "/propietarios/" + encodeURIComponent(dni))).json();
+    if (!json.ok) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No se encontró ningún propietario con ese DNI.</td></tr>';
+      mostrarAlerta(alrt, "error", `DNI «${dni}» no encontrado en el censo.`);
+      return;
+    }
+    setDatos("prop", [json.datos], "encontrado");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${err.message}</td></tr>`;
+  }
+}
+
+async function buscarPorApellidos() {
+  const ap1   = document.getElementById("busq-prop-apellido1").value.trim().toLowerCase();
+  const ap2   = document.getElementById("busq-prop-apellido2").value.trim().toLowerCase();
+  const tbody = document.getElementById("tbody-prop");
+  const alrt  = "alert-busq-prop";
+  if (!ap1 && !ap2) { mostrarAlerta(alrt, "error", "Introduzca al menos un apellido para buscar."); return; }
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Buscando…</td></tr>';
+  setContador("prop-contador", null);
+  document.getElementById(alrt).classList.remove("show");
+  try {
+    const json = await (await fetch(API + "/propietarios")).json();
+    if (!json.ok) throw new Error(json.error);
+    const filtrados = json.datos.filter(r => {
+      const p1 = (r.PRIMER_APELLIDO  || "").toLowerCase();
+      const p2 = (r.SEGUNDO_APELLIDO || "").toLowerCase();
+      return (!ap1 || p1.includes(ap1)) && (!ap2 || p2.includes(ap2));
+    });
+    if (!filtrados.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Sin resultados para ese criterio.</td></tr>';
+      const criterio = [ap1 && `«${ap1}»`, ap2 && `«${ap2}»`].filter(Boolean).join(" + ");
+      mostrarAlerta(alrt, "error", `No se encontró ningún propietario con los apellidos ${criterio}.`);
+      return;
+    }
+    setDatos("prop", filtrados, "encontrados");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${err.message}</td></tr>`;
+  }
+}
+
+async function cargarAnimales() {
+  const tbody = document.getElementById("tbody-anim");
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Cargando…</td></tr>';
+  setContador("anim-contador", null);
+  document.getElementById("alert-busq-anim").classList.remove("show");
+  try {
+    const json = await (await fetch(API + "/animales")).json();
+    if (!json.ok) throw new Error(json.error);
+    if (!json.datos.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Sin registros.</td></tr>';
+      return;
+    }
+    setDatos("anim", json.datos, "encontrados");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${err.message}</td></tr>`;
+  }
+}
+
+async function buscarAnimal() {
+  const chip  = document.getElementById("busq-anim-chip").value.trim().toUpperCase();
+  const tbody = document.getElementById("tbody-anim");
+  const alrt  = "alert-busq-anim";
+  if (!chip) { mostrarAlerta(alrt, "error", "Introduzca un número de chip para buscar."); return; }
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Buscando…</td></tr>';
+  setContador("anim-contador", null);
+  document.getElementById(alrt).classList.remove("show");
+  try {
+    const json = await (await fetch(API + "/animales/" + encodeURIComponent(chip))).json();
+    if (!json.ok) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No se encontró ningún animal con ese chip.</td></tr>';
+      mostrarAlerta(alrt, "error", `Chip «${chip}» no encontrado en el censo.`);
+      return;
+    }
+    setDatos("anim", [json.datos], "encontrado");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${err.message}</td></tr>`;
+  }
+}
+
+async function buscarAnimalesPorDni() {
+  const dni   = document.getElementById("busq-anim-dni").value.trim().toUpperCase();
+  const tbody = document.getElementById("tbody-anim");
+  const alrt  = "alert-busq-anim";
+  if (!dni) { mostrarAlerta(alrt, "error", "Introduzca un DNI de propietario para buscar."); return; }
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Buscando…</td></tr>';
+  setContador("anim-contador", null);
+  document.getElementById(alrt).classList.remove("show");
+  try {
+    const json = await (await fetch(API + "/animales")).json();
+    if (!json.ok) throw new Error(json.error);
+    const filtrados = json.datos.filter(r => (r.DNI_PROPIETARIO || "").toUpperCase() === dni);
+    if (!filtrados.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No se encontraron animales para ese DNI.</td></tr>';
+      mostrarAlerta(alrt, "error", `No hay animales registrados para el DNI «${dni}».`);
+      return;
+    }
+    setDatos("anim", filtrados, "encontrados");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${err.message}</td></tr>`;
+  }
+}
+
+// ── Estado paginación seguros ─────────────────────────────────────
+estado.seg = { datos: [], pagina: 1 };
+
+// ── Fijar fecha máxima de hoy en campos de fecha ─────────────────
+(function() {
+  const hoy = new Date().toISOString().split('T')[0];
+  ['inp-fecha-nac', 'inp-fecha-vac'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.max = hoy;
+  });
+})();
+
+// ── Filas seguros ─────────────────────────────────────────────────
+function filasSeguro(datos) {
+  return datos.map(r => `
+    <tr>
+      <td><span class="tag tag-id">${r.ID_SEGUROS || "—"}</span></td>
+      <td><span class="tag tag-id">${r.N_CHIP || "—"}</span></td>
+      <td>${r.NOMBRE_ANIMAL || "—"}</td>
+      <td>${r.ESPECIE || "—"}</td>
+      <td>${r.SEGURO_COMPANIA || "—"}</td>
+      <td>${r.SEGURO_POLIZA || "—"}</td>
+      <td>${r.DNI_PROPIETARIO || "—"}</td>
+      <td><button class="btn btn-secondary" style="padding:.25rem .6rem;font-size:.7rem;"
+          onclick="eliminarSeguro(${r.ID_SEGUROS})">Eliminar</button></td>
+    </tr>`).join("");
+}
+
+// ── Submit seguro ─────────────────────────────────────────────────
+async function submitSeguro(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btn-seg");
+  const sp  = document.getElementById("sp-seg");
+  btn.disabled = true; sp.style.display = "block";
+
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  Object.keys(data).forEach(k => { if (!data[k]) delete data[k]; });
+
+  try {
+    const res  = await fetch(API + "/seguros", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if (json.ok) {
+      mostrarAlerta("alert-seg", "ok", json.mensaje);
+      e.target.reset();
+      cargarSeguros();
+    } else {
+      mostrarAlerta("alert-seg", "error", json.error);
+    }
+  } catch {
+    mostrarAlerta("alert-seg", "error", "No se pudo conectar con el servidor.");
+  }
+  btn.disabled = false; sp.style.display = "none";
+}
+
+// ── Cargar todos los seguros ──────────────────────────────────────
+async function cargarSeguros() {
+  const tbody = document.getElementById("tbody-seg");
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Cargando…</td></tr>';
+  setContador("seg-contador", null);
+  try {
+    const json = await (await fetch(API + "/seguros")).json();
+    if (!json.ok) throw new Error(json.error);
+    if (!json.datos.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Sin pólizas registradas.</td></tr>';
+      return;
+    }
+    setDatos("seg", json.datos, "encontradas");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Error: ${err.message}</td></tr>`;
+  }
+}
+
+// ── Buscar seguros por chip ───────────────────────────────────────
+async function buscarSegurosPorChip() {
+  const chip  = document.getElementById("busq-seg-chip").value.trim().toUpperCase();
+  const tbody = document.getElementById("tbody-seg");
+  if (!chip) { mostrarAlerta("alert-seg", "error", "Introduzca un chip para buscar."); return; }
+
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Buscando…</td></tr>';
+  setContador("seg-contador", null);
+  try {
+    const json = await (await fetch(API + "/seguros")).json();
+    if (!json.ok) throw new Error(json.error);
+    const filtrados = json.datos.filter(r => (r.N_CHIP || "").toUpperCase() === chip);
+    if (!filtrados.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No se encontraron pólizas para ese chip.</td></tr>';
+      mostrarAlerta("alert-seg", "error", `No hay pólizas para el chip «${chip}».`);
+      return;
+    }
+    setDatos("seg", filtrados, "encontradas");
+  } catch(err) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Error: ${err.message}</td></tr>`;
+  }
+}
+
+// ── Eliminar seguro ───────────────────────────────────────────────
+async function eliminarSeguro(id) {
+  if (!confirm(`¿Eliminar la póliza con ID ${id}?`)) return;
+  try {
+    const json = await (await fetch(API + "/seguros/" + id, { method: "DELETE" })).json();
+    if (json.ok) {
+      mostrarAlerta("alert-seg", "ok", json.mensaje);
+      cargarSeguros();
+    } else {
+      mostrarAlerta("alert-seg", "error", json.error);
+    }
+  } catch {
+    mostrarAlerta("alert-seg", "error", "No se pudo conectar con el servidor.");
+  }
+}
+
+// ── Carga inicial de sexos desde la BD ───────────────────────────
+async function cargarSexos() {
+  const sel = document.getElementById("sel-sexo");
+  try {
+    const json = await (await fetch(API + "/sexos")).json();
+    if (!json.ok || !json.datos.length) throw new Error();
+    sel.innerHTML = '<option value="">— Seleccionar —</option>' +
+      json.datos.map(r => {
+        const valor = r.SEXO || r.CLAVE || "";
+        return `<option value="${valor}">${valor}</option>`;
+      }).join("");
+  } catch {
+    sel.innerHTML = `
+      <option value="">— Seleccionar —</option>
+      <option value="Macho">Macho</option>
+      <option value="Hembra">Hembra</option>`;
+  }
+}
+
+cargarSexos();
+</script>
+</body>
+</html>
